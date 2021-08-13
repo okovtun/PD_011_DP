@@ -1,6 +1,7 @@
 #include<iostream>
 #include<string>
 #include<ctime>
+#include<map>
 using namespace std;
 
 class Human
@@ -70,35 +71,43 @@ public:
 	}
 };
 
-enum HumanType
-{
-	Traveller,
-	PoliceOfficer,
-	Bandit
-};
 
-std::string weapons[] =
+class HumanFactory
 {
-	"",
-	"Knife",
-	"Beretta",
-	"SPAS-12",
-	"Ingram",
-	"M4A1",
-};
-
-Human* humanFactory(HumanType human_type)
-{
-	switch (human_type)
+public:
+	enum HumanType
 	{
-	case Traveller:		return new class Traveller(100, rand() % 10 + 10, 0);
-	case PoliceOfficer:	return new class PoliceOfficer(100, rand() % 10 + 20, 100, "Beretta");
-	case Bandit:		
-		return new class Bandit(rand() % 50 + 50, rand() % 10 + 30, rand() % 20 + 80, weapons[rand()%(sizeof(weapons)/sizeof(std::string))]);
+		Traveller,
+		PoliceOfficer,
+		Bandit
+	};
+
+	static std::map<size_t, std::string> weapons;
+
+	static Human* humanFactory(HumanType human_type)
+	{
+		switch (human_type)
+		{
+		case Traveller:		return new class Traveller(100, rand() % 10 + 10, 0);
+		case PoliceOfficer:	return new class PoliceOfficer(100, rand() % 10 + 20, 100, "Beretta");
+		case Bandit:
+			return new class Bandit(rand() % 50 + 50, rand() % 10 + 30, rand() % 20 + 80, weapons[rand() % (weapons.size())]);
+		}
 	}
-}
+};
+
+std::map<size_t, std::string> HumanFactory::weapons =
+{
+	std::pair<size_t, std::string>(0, "None"),
+	std::pair<size_t, std::string>(1, "Beretta"),
+	std::pair<size_t, std::string>(2, "SPAS-12"),
+	std::pair<size_t, std::string>(3, "Ingram"),
+	std::pair<size_t, std::string>(4, "M4A1"),
+	std::pair<size_t, std::string>(5, "Knife")
+};
 
 //#define FACTORY_CHECK_1
+#define FACTORY_CHECK_2
 
 void main()
 {
@@ -117,6 +126,7 @@ void main()
 	b->info();
 #endif // FACTORY_CHECK_1
 
+#ifdef FACTORY_CHECK_2
 	//cout << sizeof(HumanType) << endl;
 	const int n = 10;
 	Human* human[n]{};
@@ -125,17 +135,19 @@ void main()
 	unsigned int bandit_count = 0;
 	for (int i = 0; i < n; i++)
 	{
-		human[i] = humanFactory(HumanType(rand() % 3));
+		human[i] = HumanFactory::humanFactory(HumanFactory::HumanType(rand() % 3));
 		human[i]->info();
 		if (typeid(*human[i]) == typeid(class Traveller))traveller_count++;
 		if (typeid(*human[i]) == typeid(class PoliceOfficer))police_officer_count++;
 		if (typeid(*human[i]) == typeid(class Bandit))bandit_count++;
 	}
 	cout << "Travellers: " << traveller_count << endl;
-	cout << "Officers: " << police_officer_count<< endl;
-	cout << "Bandits: " << bandit_count	<< endl;
+	cout << "Officers: " << police_officer_count << endl;
+	cout << "Bandits: " << bandit_count << endl;
 	for (int i = 0; i < n; i++)
 	{
 		delete human[i];
 	}
+#endif // FACTORY_CHECK_2
+
 }
