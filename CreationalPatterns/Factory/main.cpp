@@ -120,20 +120,20 @@ void main()
 	//cout << sizeof(HumanType) << endl;
 	const int n = 10;
 	Human* human[n]{};
-	unsigned int traveller_cout = 0;
-	unsigned int police_officer_cout = 0;
-	unsigned int bandit_cout = 0;
+	unsigned int traveller_count = 0;
+	unsigned int police_officer_count = 0;
+	unsigned int bandit_count = 0;
 	for (int i = 0; i < n; i++)
 	{
 		human[i] = humanFactory(HumanType(rand() % 3));
 		human[i]->info();
-		if (typeid(*human[i]) == typeid(Traveller))traveller_cout++;
-		if (typeid(*human[i]) == typeid(PoliceOfficer))police_officer_cout++;
-		if (typeid(*human[i]) == typeid(Bandit))bandit_cout++;
+		if (typeid(*human[i]) == typeid(class Traveller))traveller_count++;
+		if (typeid(*human[i]) == typeid(class PoliceOfficer))police_officer_count++;
+		if (typeid(*human[i]) == typeid(class Bandit))bandit_count++;
 	}
-	cout << "Travellers: " << traveller_cout << endl;
-	cout << "Officers: " << police_officer_cout<< endl;
-	cout << "Bandits: " << bandit_cout	<< endl;
+	cout << "Travellers: " << traveller_count << endl;
+	cout << "Officers: " << police_officer_count<< endl;
+	cout << "Bandits: " << bandit_count	<< endl;
 	for (int i = 0; i < n; i++)
 	{
 		delete human[i];
